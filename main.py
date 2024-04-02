@@ -9,9 +9,9 @@ def main():
       if not isinstance(book, Book):
           print(f"잘못된 아이템: {book}")
     # CSV 파일 저장 로직
-    save_to_csv("books.csv", books, Book)
-    save_to_csv("authors.csv", authors, Author)
-    save_to_csv("media.csv", media, Media)
+    save_to_csv("./data/books.csv", books, Book)
+    save_to_csv("./data/authors.csv", authors, Author)
+    save_to_csv("./data/media.csv", media, Media)
 
     corps = scraper.scrape_corps_from_books()
     corps = list(set(corps))

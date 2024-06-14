@@ -2,8 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from data_models import Book, Author, Media, Corp
 
@@ -24,7 +22,7 @@ class Scraper:
         books, authors, media = self.books, self.authors, self.media
 
         time.sleep(3)
-        print("-----------------------scrape start--------------------")
+        print("-----------------------scraping start--------------------")
         
         page_num = 1
         num = 0
@@ -79,7 +77,6 @@ class Scraper:
                         else:
                           values[content] = "한국어"  
 
-                # 찾은 <li> 태그 내의 모든 'intro_category_link' 클래스를 가진 <a> 태그를 찾습니다.
                 category_links = category_list_item.find_elements(By.CSS_SELECTOR, ".intro_category_link")
 
                 if len(category_links) > 1 :  
@@ -126,29 +123,17 @@ class Scraper:
 
                 if person_genre_divs:
                     genre_elements = person_genre_divs[0].find_elements(By.CLASS_NAME, 'genre')
-
                     if genre_elements:
                         last_genre_text = genre_elements[-1].text.split("＞")[-1]
                         print(last_genre_text)
-                        
-                    else:
-                        print("No 'genre' elements found within the first 'person_genre' div.")
-                else:
-                    print("No 'person_genre' divs found.")
-
+                
+                birth_element = False
                 if person_bitrh_divs:
                     try:
                       birth_element = self.driver.find_element(By.XPATH, "//span[contains(text(), '출생지')]/following-sibling::span[@class='desc']")
+                      last_birth_text = birth_element.text
                     except NoSuchElementException:
-                        birth_element = False
-
-                    if birth_element:
-                        last_birth_text = birth_element.text
-                        print(last_birth_text)
-                    else:
-                        print("No 'genre' elements found within the first 'person_genre' div.")
-                else:
-                    print("No 'person_genre' divs found.")
+                        pass
 
                 # -------------------------------------------------------------
                 book = Book(id=num, title=title, author=author, publisher=publisher, published_date=published_date,
